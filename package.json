@@ -12,7 +12,7 @@
     "test:bdd:hu3": "node --import tsx ./node_modules/@cucumber/cucumber/bin/cucumber.js --import \"tests/support/**/*.ts\" --import \"tests/step_definitions/**/*.ts\" features/carrito/agregar-producto.feature --format html:reports/cucumber-hu3.html",
     "test:bdd:hu4": "node --import tsx ./node_modules/@cucumber/cucumber/bin/cucumber.js --import \"tests/support/**/*.ts\" --import \"tests/step_definitions/**/*.ts\" features/carrito/modificar-cantidad.feature --format html:reports/cucumber-hu4.html",
     "test:bdd:hu5": "node --import tsx ./node_modules/@cucumber/cucumber/bin/cucumber.js --import \"tests/support/**/*.ts\" --import \"tests/step_definitions/**/*.ts\" features/carrito/eliminar-producto.feature --format html:reports/cucumber-hu5.html",
-    "test:bdd:auth": "node --import tsx ./node_modules/@cucumber/cucumber/bin/cucumber.js --import tests/support/**/*.ts --import tests/step_definitions/**/*.ts features/auth/**/*.feature --format html:reports/cucumber-auth.html"
+    "test:bdd:auth": "node --import tsx ./node_modules/@cucumber/cucumber/bin/cucumber.js --import \"tests/support/**/*.ts\" --import \"tests/step_definitions/**/*.ts\" features/auth/**/*.feature --format html:reports/cucumber-auth.html"
   },
   "dependencies": {
     "bcrypt": "^6.0.0",
