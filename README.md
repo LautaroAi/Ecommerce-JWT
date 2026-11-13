@@ -167,6 +167,16 @@ El flujo consta de los siguientes pasos:
 3. **BDD Tests:** Ejecuta las pruebas de Cucumber para HU3, HU4 y HU5.
 4. **Artifacts:** Sube los reportes HTML de Cucumber como artefacto descargable en GitHub Actions.
 
+## Documentación de la API
+
+La API cuenta con documentación interactiva generada con Swagger UI. Una vez levantado el servidor (`npm run dev`), podés acceder a:
+
+```bash
+http://localhost:3000/api/v1/docs
+```
+
+Desde allí podés explorar los endpoints de carrito (HU3, HU4, HU5) y probarlos directamente en el navegador.
+
 ## Estado
 
 🚧 Proyecto en desarrollo.

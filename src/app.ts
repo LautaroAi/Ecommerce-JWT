@@ -1,4 +1,6 @@
 import express, { type Express } from 'express';
+import swaggerUi from 'swagger-ui-express';
+import { swaggerSpec } from './shared/swagger/swagger-spec.js';
 import { ProductosRepository } from './productos/productos.repository.js';
 import { CarritoRepository } from './carrito/carrito.repository.js';
 import { CarritoService } from './carrito/carrito.service.js';
@@ -26,6 +28,8 @@ export function createApp(deps: AppDependencies): Express {
   const app = express();
   app.use(express.json());
 
+  app.use('/api/v1/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+  
   app.use('/api/v1/carrito', crearCarritoRouter(deps.carritoService));
 
   app.use(notFound);
