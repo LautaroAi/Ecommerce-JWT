@@ -12,8 +12,8 @@ Given(
 When(
   'el cliente {int} elimina el producto {int} de su carrito',
   async function (this: CustomWorld, clienteId: number, productoId: number) {
-    this.lastResponse = await request(this.app).delete(
-      `/api/v1/carrito/${clienteId}/items/${productoId}`
-    );
+    this.lastResponse = await request(this.app)
+      .delete(`/api/v1/carrito/${clienteId}/items/${productoId}`)
+      .set('Authorization', `Bearer ${this.tokens[clienteId]}`);
   }
 );

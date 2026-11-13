@@ -32,11 +32,15 @@ jobs:
       #  run: npm run build
         
         # Agregar las otras cuando estén en GREEN
-      - name: Ejecutar pruebas BDD (HU3, HU4, HU5)
+      - name: Ejecutar pruebas BDD (Carrito + Auth)
+        env:
+          JWT_SECRET: test_secret_ci
+          JWT_REFRESH_SECRET: test_refresh_secret_ci
         run: |
           npm run test:bdd:hu3
           npm run test:bdd:hu4
           npm run test:bdd:hu5
+          npm run test:bdd:auth
 
       - name: Publicar reporte de Cucumber
         if: always()
