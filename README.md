@@ -141,6 +141,26 @@ Prueba en verde
 Refactorización
 ```
 
+## Seguridad y Autenticación
+
+La API implementa un modelo de seguridad basado en **JWT (JSON Web Tokens)**, **RBAC (Role-Based Access Control)** y prevención de **IDOR (Insecure Direct Object Reference)**, alineado con las recomendaciones de OWASP.
+
+### Características de seguridad implementadas:
+- **Hashing de contraseñas:** Uso de `bcrypt` con un factor de costo de 12 (`saltRounds`), lo que aplica 4.096 iteraciones para proteger las credenciales contra ataques de fuerza bruta.
+- **Tokens duales:** 
+  - `Access Token` (15 min) para acceder a rutas protegidas.
+  - `Refresh Token` (7 días) para renovar el Access Token sin volver a iniciar sesión.
+- **Protección de Rutas (RBAC):** Los middlewares `requireAuth` y `requireRole` aseguran que solo los usuarios autenticados y con el rol adecuado (ej. `ADMIN`) puedan acceder a ciertos endpoints.
+- **Prevención de IDOR:** El middleware `checkOwnership` verifica que un `CLIENTE` solo pueda acceder a su propio carrito (`/api/v1/carrito/:clienteId`), bloqueando intentos de acceso a recursos ajenos.
+- **Rate Limiting:** Límite de 5 intentos cada 15 minutos en el endpoint de login para mitigar ataques de fuerza bruta.
+- **Sanitización y Validación:** Uso de `Zod` para validar estrictamente los esquemas de entrada y evitar inyecciones (Mass Assignment).
+- **Logs Seguros:** Implementación de `pino` con redacción automática de datos sensibles (contraseñas y tokens) en los logs.
+
+### Endpoints de Autenticación:
+- `POST /api/v1/auth/register`: Registro de nuevos usuarios (Rol por defecto: `CLIENTE`).
+- `POST /api/v1/auth/login`: Inicio de sesión (retorna Access y Refresh tokens).
+- `POST /api/v1/auth/refresh`: Renovación del Access Token.
+
 ## Ejecución de pruebas BDD
 
 El proyecto utiliza Cucumber 12 con soporte para ESM y TypeScript mediante `tsx`. Para ejecutar las pruebas localmente:
@@ -149,10 +169,11 @@ El proyecto utiliza Cucumber 12 con soporte para ESM y TypeScript mediante `tsx`
 # Ejecutar todos los escenarios (se ignora hasta que estén todas en GREEN)
 npm run test:bdd
 
-# Ejecutar pruebas de una Historia de Usuario específica
+# Ejecutar pruebas de una Historia de Usuario específica o módulo específico
 npm run test:bdd:hu3
 npm run test:bdd:hu4
 npm run test:bdd:hu5
+npm run test:bdd:auth
 ```
 
 Los reportes en formato HTML se generan automáticamente en la carpeta `reports/` (ignorada por Git) al ejecutar los comandos.
@@ -164,7 +185,7 @@ El flujo consta de los siguientes pasos:
 
 1. **Typecheck:** Valida los tipos estrictos de TypeScript (`tsc --noEmit`).
 2. **Build:** Compila el proyecto a la carpeta dist/.
-3. **BDD Tests:** Ejecuta las pruebas de Cucumber para HU3, HU4 y HU5.
+3. **BDD Tests:** Ejecuta las pruebas de Cucumber para HU3, HU4, HU5 y Auth.
 4. **Artifacts:** Sube los reportes HTML de Cucumber como artefacto descargable en GitHub Actions.
 
 ## Documentación de la API
@@ -175,7 +196,7 @@ La API cuenta con documentación interactiva generada con Swagger UI. Una vez le
 http://localhost:3000/api/v1/docs
 ```
 
-Desde allí podés explorar los endpoints de carrito (HU3, HU4, HU5) y probarlos directamente en el navegador.
+Desde allí podés explorar los endpoints de autenticación y carrito, y probarlos directamente. Para probar las rutas protegidas del carrito, primero debés hacer login y usar el botón "Authorize" (candado) en Swagger UI para inyectar el token JWT.
 
 ## Estado
 
