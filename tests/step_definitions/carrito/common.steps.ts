@@ -1,12 +1,29 @@
 import { Given, Then } from '@cucumber/cucumber';
 import assert from 'node:assert/strict';
 import request from 'supertest';
+import bcrypt from 'bcrypt';
 import type { CustomWorld } from '../../support/world.js';
 
 Given(
   'que existe un cliente con id {int}',
-  function (this: CustomWorld, _clienteId: number) {
-    // El modulo de clientes no se modela en este alcance.
+  async function (this: CustomWorld, clienteId: number) {
+    const id = Number(clienteId);
+
+    // Si el usuario no existe en el repo, lo creamos
+    if (!this.deps.usuariosRepository.buscarPorId(id)) {
+      const passwordHash = await bcrypt.hash('Password123!', 12);
+      this.deps.usuariosRepository.guardar({
+        id: id,
+        nombre: `Cliente ${id}`,
+        email: `cliente${id}@test.com`,
+        passwordHash,
+        rol: 'CLIENTE'
+      });
+    }
+    // Generamos el token usando el AuthService y lo guardamos
+    const usuario = this.deps.usuariosRepository.buscarPorId(id)!;
+    const { accessToken } = this.deps.authService.generarTokens(usuario);
+    this.tokens[id] = accessToken;
   }
 );
 
@@ -54,7 +71,9 @@ Then(
     productoId: number,
     cantidad: number
   ) {
-    const response = await request(this.app).get(`/api/v1/carrito/${clienteId}`);
+    const response = await request(this.app)
+      .get(`/api/v1/carrito/${clienteId}`)
+      .set('Authorization', `Bearer ${this.tokens[clienteId]}`);
     const item = response.body.data.items.find(
       (i: { productoId: number }) => i.productoId === productoId
     );
@@ -66,7 +85,9 @@ Then(
 Then(
   'el total del carrito del cliente {int} debe ser {int}',
   async function (this: CustomWorld, clienteId: number, total: number) {
-    const response = await request(this.app).get(`/api/v1/carrito/${clienteId}`);
+    const response = await request(this.app)
+      .get(`/api/v1/carrito/${clienteId}`)
+      .set('Authorization', `Bearer ${this.tokens[clienteId]}`);
     assert.equal(response.body.data.total, total);
   }
 );
@@ -85,7 +106,9 @@ Then(
 Then(
   'el carrito del cliente {int} no debe contener el producto {int}',
   async function (this: CustomWorld, clienteId: number, productoId: number) {
-    const response = await request(this.app).get(`/api/v1/carrito/${clienteId}`);
+    const response = await request(this.app)
+      .get(`/api/v1/carrito/${clienteId}`)
+      .set('Authorization', `Bearer ${this.tokens[clienteId]}`);
     const item = response.body.data.items.find(
       (i: { productoId: number }) => i.productoId === productoId
     );
@@ -96,7 +119,9 @@ Then(
 Then(
   'el carrito del cliente {int} debe estar vacio',
   async function (this: CustomWorld, clienteId: number) {
-    const response = await request(this.app).get(`/api/v1/carrito/${clienteId}`);
+    const response = await request(this.app)
+      .get(`/api/v1/carrito/${clienteId}`)
+      .set('Authorization', `Bearer ${this.tokens[clienteId]}`);
     assert.equal(response.body.data.items.length, 0);
   }
 );

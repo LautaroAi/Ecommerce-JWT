@@ -12,6 +12,7 @@ When(
   ) {
     this.lastResponse = await request(this.app)
       .post(`/api/v1/carrito/${clienteId}/items`)
+      .set('Authorization', `Bearer ${this.tokens[clienteId]}`)
       .send({ productoId, cantidad });
   }
 );
