@@ -149,8 +149,8 @@
 **Criterios de aceptación:**
 
 1. `.github/workflows/ci.yml` corre en `push` y `pull_request` sobre Node 20.x con `npm ci`.
-2. El pipeline ejecuta en orden: `npm run lint` → `npm run build` → `npm run test:bdd`; falla si cualquiera devuelve error.
-3. Publica el reporte HTML de Cucumber como artefacto (`actions/upload-artifact`) aunque el pipeline falle.
+2. El pipeline ejecuta en orden: `npm run typecheck` → `npm run build` → `npm run test:bdd:hu3`, `npm run test:bdd:hu4`, `npm run test:bdd:hu5` (se ejecutan por separado hasta que HU1 esté en GREEN); falla si cualquiera devuelve error.
+3. Publica los reportes HTML generados por Cucumber (`reports/`) como artefacto (`actions/upload-artifact`) incluso si el pipeline falla.
 
 **Responsable:** Lautaro
 **Depende de:** HT1

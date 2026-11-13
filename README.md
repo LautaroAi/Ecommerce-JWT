@@ -30,7 +30,7 @@ El desarrollo sigue una dinámica incremental basada en prácticas de Extreme Pr
 - **TDD/BDD:** primero se define el comportamiento esperado, luego se implementa la solución mínima necesaria para hacerlo pasar.
 - **Diseño simple:** se evita agregar complejidad que no sea requerida por el comportamiento actual.
 - **Refactorización continua:** una vez alcanzado el comportamiento esperado, se mejora el código sin alterar su resultado.
-- **Integración continua:** el proyecto incorporará un pipeline que valide compilación y pruebas automáticamente.
+- **Integración continua:** el proyecto cuenta con un pipeline en GitHub Actions que valida tipos, compilación y pruebas BDD automáticamente en cada push.
 
 ## Arquitectura prevista
 
@@ -141,8 +141,34 @@ Prueba en verde
 Refactorización
 ```
 
+## Ejecución de pruebas BDD
+
+El proyecto utiliza Cucumber 12 con soporte para ESM y TypeScript mediante `tsx`. Para ejecutar las pruebas localmente:
+
+```bash
+# Ejecutar todos los escenarios (se ignora hasta que estén todas en GREEN)
+npm run test:bdd
+
+# Ejecutar pruebas de una Historia de Usuario específica
+npm run test:bdd:hu3
+npm run test:bdd:hu4
+npm run test:bdd:hu5
+```
+
+Los reportes en formato HTML se generan automáticamente en la carpeta `reports/` (ignorada por Git) al ejecutar los comandos.
+
+## Integración Continua (CI)
+El pipeline de CI está configurado en `.github/workflows/ci.yml` y se ejecuta en cada `push` y `pull_request` hacia la rama `main` o ramas `feature/*`.
+
+El flujo consta de los siguientes pasos:
+
+1. **Typecheck:** Valida los tipos estrictos de TypeScript (`tsc --noEmit`).
+2. **Build:** Compila el proyecto a la carpeta dist/.
+3. **BDD Tests:** Ejecuta las pruebas de Cucumber para HU3, HU4 y HU5.
+4. **Artifacts:** Sube los reportes HTML de Cucumber como artefacto descargable en GitHub Actions.
+
 ## Estado
 
 🚧 Proyecto en desarrollo.
 
-La primera etapa consiste en definir el backlog, los criterios de aceptación y los escenarios BDD antes de implementar la lógica de producción.
+El módulo de carrito (HU3, HU4, HU5) y la Integración Continua (HT2) se encuentran implementados y con pruebas en verde. Las etapas siguientes incluyen completar el catálogo de productos y el flujo de checkout.
