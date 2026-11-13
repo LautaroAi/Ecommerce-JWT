@@ -11,15 +11,26 @@
     "test:bdd:hu1": "node --import tsx ./node_modules/@cucumber/cucumber/bin/cucumber.js --import \"tests/support/**/*.ts\" --import \"tests/step_definitions/**/*.ts\" features/productos/listar-productos.feature --format html:reports/cucumber-hu1.html",
     "test:bdd:hu3": "node --import tsx ./node_modules/@cucumber/cucumber/bin/cucumber.js --import \"tests/support/**/*.ts\" --import \"tests/step_definitions/**/*.ts\" features/carrito/agregar-producto.feature --format html:reports/cucumber-hu3.html",
     "test:bdd:hu4": "node --import tsx ./node_modules/@cucumber/cucumber/bin/cucumber.js --import \"tests/support/**/*.ts\" --import \"tests/step_definitions/**/*.ts\" features/carrito/modificar-cantidad.feature --format html:reports/cucumber-hu4.html",
-    "test:bdd:hu5": "node --import tsx ./node_modules/@cucumber/cucumber/bin/cucumber.js --import \"tests/support/**/*.ts\" --import \"tests/step_definitions/**/*.ts\" features/carrito/eliminar-producto.feature --format html:reports/cucumber-hu5.html"
+    "test:bdd:hu5": "node --import tsx ./node_modules/@cucumber/cucumber/bin/cucumber.js --import \"tests/support/**/*.ts\" --import \"tests/step_definitions/**/*.ts\" features/carrito/eliminar-producto.feature --format html:reports/cucumber-hu5.html",
+    "test:bdd:auth": "node --import tsx ./node_modules/@cucumber/cucumber/bin/cucumber.js --import tests/support/**/*.ts --import tests/step_definitions/**/*.ts features/auth/**/*.feature --format html:reports/cucumber-auth.html"
   },
   "dependencies": {
+    "bcrypt": "^6.0.0",
+    "cors": "^2.8.6",
+    "dotenv": "^18.0.10",
     "express": "^5.1.0",
-    "swagger-ui-express": "^5.0.1"
+    "express-rate-limit": "^8.7.4",
+    "jsonwebtoken": "^9.0.3",
+    "pino": "^10.4.0",
+    "swagger-ui-express": "^5.0.1",
+    "zod": "^4.6.7"
   },
   "devDependencies": {
     "@cucumber/cucumber": "^12.2.0",
+    "@types/bcrypt": "^6.0.0",
+    "@types/cors": "^2.8.19",
     "@types/express": "^5.0.3",
+    "@types/jsonwebtoken": "^9.0.10",
     "@types/supertest": "^6.0.3",
     "@types/swagger-ui-express": "^4.1.8",
     "supertest": "^7.1.4",
